@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deisiane Vieira — Desenvolvedora Full Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ===================== RESET & BASE ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #060a10;
+      --bg-2:      #0c1220;
+      --bg-card:   #0f1826;
+      --border:    rgba(0,220,180,0.12);
+      --border-h:  rgba(0,220,180,0.35);
+      --accent:    #00dbb4;
+      --accent2:   #ffd166;
+      --accent3:   #ff6b6b;
+      --text:      #e8f0f7;
+      --muted:     #6b8299;
+      --syne:      'Syne', sans-serif;
+      --mono:      'IBM Plex Mono', monospace;
+      --sans:      'IBM Plex Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.65;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ===================== CUSTOM CURSOR ===================== */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid rgba(0,219,180,0.5);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
+    }
+    body:has(a:hover) .cursor { background: var(--accent2); transform: translate(-50%,-50%) scale(1.5); }
+    body:has(a:hover) .cursor-ring { border-color: var(--accent2); width: 50px; height: 50px; }
+
+    /* ===================== SCROLLBAR ===================== */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+    /* ===================== NOISE TEXTURE ===================== */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    /* ===================== GRID OVERLAY ===================== */
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,219,180,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,219,180,0.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* ===================== NAV ===================== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4vw;
+      background: rgba(6,10,16,0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--muted); }
+    nav ul { list-style: none; display: flex; gap: 2.5rem; align-items: center; }
+    nav ul a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--accent); }
+    .nav-cta {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent) !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: 2px;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: rgba(0,219,180,0.1) !important; }
+
+    /* ===================== SECTIONS ===================== */
+    section { position: relative; z-index: 1; }
+
+    /* ===================== HERO ===================== */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 4vw 80px;
+      overflow: hidden;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+    .hero-tag::before { content: '// '; color: var(--muted); }
+    .hero-name {
+      font-family: var(--syne);
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.35s forwards;
+    }
+    .hero-name .accent { color: var(--accent); }
+    .hero-name .dot { color: var(--accent2); }
+    .hero-role {
+      font-family: var(--mono);
+      font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s forwards;
+    }
+    .hero-role .typing { color: var(--text); border-right: 2px solid var(--accent); padding-right: 3px; animation: blink 0.8s infinite; }
+    .hero-desc {
+      max-width: 520px;
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.65s forwards;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+    .hero-btns {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: #00c9a3; transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      border: 1px solid var(--border-h);
+      border-radius: 2px;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* hero decorative glow */
+    .hero-glow {
+      position: absolute;
+      right: -10vw; top: 50%;
+      transform: translateY(-50%);
+      width: 55vw; height: 55vw;
+      max-width: 700px; max-height: 700px;
+      background: radial-gradient(ellipse at center, rgba(0,219,180,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      animation: pulse 6s ease-in-out infinite;
+    }
+    .hero-glow-2 {
+      position: absolute;
+      left: -5vw; bottom: 10%;
+      width: 30vw; height: 30vw;
+      max-width: 400px; max-height: 400px;
+      background: radial-gradient(ellipse at center, rgba(255,209,102,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-stats {
+      position: absolute;
+      right: 4vw; bottom: 10%;
+      display: flex; gap: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 1s forwards;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: var(--syne);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: block;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 4vw;
+      font-family: var(--mono); font-size: 0.68rem;
+      color: var(--muted); letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.8rem;
+      opacity: 0; animation: fadeUp 0.7s 1.2s forwards;
+    }
+    .scroll-hint::before {
+      content: ''; display: block; width: 40px; height: 1px; background: var(--muted);
+    }
+
+    /* ===================== ABOUT ===================== */
+    #about {
+      padding: 100px 4vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5vw;
+      align-items: start;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .section-label::before { content: '[ '; }
+    .section-label::after { content: ' ]'; }
+    .section-title {
+      font-family: var(--syne);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .about-text {
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.75;
+      margin-bottom: 1.2rem;
+    }
+    .about-text strong { color: var(--text); font-weight: 500; }
+    .about-highlight {
+      margin-top: 2rem;
+      padding: 1.2rem 1.5rem;
+      border-left: 2px solid var(--accent);
+      background: rgba(0,219,180,0.04);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--text);
+      border-radius: 0 4px 4px 0;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .skill-group-title {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,219,180,0.05); }
+    .tag.hot { border-color: rgba(0,219,180,0.3); color: var(--text); }
+
+    /* formation bar */
+    .formation {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .formation-title {
+      font-family: var(--syne);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .formation-sub {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .progress-bar {
+      height: 3px; background: rgba(255,255,255,0.06);
+      border-radius: 2px; overflow: hidden; margin-bottom: 0.4rem;
+    }
+    .progress-fill {
+      height: 100%; background: var(--accent);
+      border-radius: 2px;
+      width: 0; transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .progress-label {
+      font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em;
+    }
+
+    /* ===================== PROJECTS ===================== */
+    #projects {
+      padding: 100px 4vw;
+      border-top: 1px solid var(--border);
+    }
+    .projects-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 4rem;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      opacity: 0; transform: translateY(30px);
+    }
+    .project-card.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, box-shadow 0.3s;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+    .project-card:hover { border-color: var(--border-h); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-num {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+    .project-name {
+      font-family: var(--syne);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      line-height: 1.2;
+    }
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+    .ptag {
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      background: rgba(0,219,180,0.07);
+      border: 1px solid rgba(0,219,180,0.15);
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+    .ptag.yellow { background: rgba(255,209,102,0.07); border-color: rgba(255,209,102,0.2); color: var(--accent2); }
+    .ptag.red { background: rgba(255,107,107,0.07); border-color: rgba(255,107,107,0.2); color: var(--accent3); }
+    .project-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+    }
+    .project-type {
+      font-family: var(--mono); font-size: 0.68rem;
+      color: var(--muted); letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .project-link {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--accent); text-decoration: none;
+      letter-spacing: 0.05em;
+      display: flex; align-items: center; gap: 0.4rem;
+      transition: gap 0.2s;
+    }
+    .project-link:hover { gap: 0.8rem; }
+    .project-link::after { content: '→'; }
+
+    /* featured card */
+    .project-card.featured {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .project-card.featured .project-visual {
+      background: linear-gradient(135deg, rgba(0,219,180,0.06), rgba(255,209,102,0.04));
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono);
+      font-size: 3rem;
+      color: var(--accent);
+      opacity: 0.6;
+      min-height: 180px;
+    }
+
+    /* ===================== TIMELINE ===================== */
+    #experience {
+      padding: 100px 4vw;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6vw;
+    }
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 2.5rem;
+      opacity: 0; transform: translateX(-20px);
+    }
+    .timeline-item.visible {
+      opacity: 1; transform: translateX(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute; left: -2rem;
+      top: 0.45rem;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      transform: translateX(-4px);
+    }
+    .tl-date {
+      font-family: var(--mono);
+      font-size: 0.7rem; color: var(--accent);
+      letter-spacing: 0.1em; margin-bottom: 0.3rem;
+    }
+    .tl-title {
+      font-family: var(--syne);
+      font-size: 1.05rem; font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .tl-org {
+      font-family: var(--mono);
+      font-size: 0.78rem; color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .tl-desc {
+      font-size: 0.88rem; color: var(--muted); line-height: 1.6;
+    }
+
+    /* ===================== CONTACT ===================== */
+    #contact {
+      padding: 100px 4vw;
+      border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+    }
+    .contact-big {
+      font-family: var(--syne);
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .contact-big .accent { color: var(--accent); }
+    .contact-sub {
+      font-size: 1rem; color: var(--muted);
+      max-width: 480px; line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    .contact-links {
+      display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-family: var(--mono); font-size: 0.85rem;
+      color: var(--muted); text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.85rem 1.8rem;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .contact-link:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,219,180,0.05); }
+    .contact-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* ===================== FOOTER ===================== */
+    footer {
+      padding: 2rem 4vw;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--muted); letter-spacing: 0.08em;
+      position: relative; z-index: 1;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ===================== ANIMATIONS ===================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+      50%       { opacity: 0.7; transform: translateY(-50%) scale(1.05); }
+    }
+    @keyframes blink {
+      0%, 100% { border-color: var(--accent); }
+      50%       { border-color: transparent; }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* ===================== REVEAL ===================== */
+    .reveal { opacity: 0; transform: translateY(28px); }
+    .reveal.visible {
+      opacity: 1; transform: translateY(0);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 900px) {
+      #about { grid-template-columns: 1fr; }
+      #experience { grid-template-columns: 1fr; }
+      .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+      .project-card.featured .project-visual { display: none; }
+      .hero-stats { position: static; margin-top: 3rem; justify-content: flex-start; }
+      nav ul li:not(:last-child) { display: none; }
+    }
+    @media (max-width: 600px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- GRID OVERLAY -->
+  <div class="grid-overlay"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">dv<span>.dev</span></a>
+    <ul>
+      <li><a href="#about">Sobre</a></li>
+      <li><a href="#projects">Projetos</a></li>
+      <li><a href="#experience">Experiência</a></li>
+      <li><a href="#contact" class="nav-cta">Contato</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow-2"></div>
+
+    <p class="hero-tag">desenvolvedora full stack</p>
+
+    <h1 class="hero-name">
+      Deisiane<br>
+      <span class="accent">Vieira</span><span class="dot">.</span>
+    </h1>
+
+    <p class="hero-role">
+      <span class="typing" id="typingText">C# · TypeScript · IA · Cloud</span>
+    </p>
+
+    <p class="hero-desc">
+      Desenvolvedora full stack formada em <strong>Análise e Desenvolvimento de Sistemas</strong> pela UNISUAM.
+      Crio sistemas de gestão, integrações com IA e automações que resolvem problemas reais — do backend ao deploy.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">Ver projetos</a>
+      <a href="#contact" class="btn-ghost">Entrar em contato</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">6+</span>
+        <span class="stat-label">Projetos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">3+</span>
+        <span class="stat-label">Anos dev</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">10+</span>
+        <span class="stat-label">Tecnologias</span>
+      </div>
+    </div>
+
+    <p class="scroll-hint">Rolar para explorar</p>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="reveal">
+      <p class="section-label">sobre mim</p>
+      <h2 class="section-title">Código com propósito, solução com detalhe.</h2>
+      <p class="about-text">
+        Sou desenvolvedora full stack no time da <strong>Rosadas Tech</strong>, onde construo e mantenho sistemas de gestão para supermercados, plataformas de operação e integrações com IA. Meu foco é entregar produtos completos — do banco de dados à interface.
+      </p>
+      <p class="about-text">
+        Trabalho principalmente com <strong>ASP.NET Core MVC</strong>, <strong>Next.js/TypeScript</strong> e <strong>Supabase/PostgreSQL</strong>. Tenho experiência prática com automações via <strong>n8n</strong> e integração de modelos de linguagem da <strong>OpenAI</strong> em fluxos de produção reais.
+      </p>
+      <div class="about-highlight">
+        "Formada em Análise e Desenvolvimento de Sistemas — UNISUAM, Rio de Janeiro. Dezembro de 2025."
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="skills-grid">
+        <div class="skill-group">
+          <p class="skill-group-title">Linguagens</p>
+          <div class="skill-tags">
+            <span class="tag hot">C#</span>
+            <span class="tag hot">TypeScript</span>
+            <span class="tag hot">JavaScript</span>
+            <span class="tag">Python</span>
+            <span class="tag">PHP</span>
+            <span class="tag">SQL</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="skill-group-title">Frameworks</p>
+          <div class="skill-tags">
+            <span class="tag hot">ASP.NET Core MVC</span>
+            <span class="tag hot">Next.js</span>
+            <span class="tag">Entity Framework</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="skill-group-title">Banco de Dados</p>
+          <div class="skill-tags">
+            <span class="tag hot">PostgreSQL</span>
+            <span class="tag hot">Supabase</span>
+            <span class="tag">SQL Server</span>
+            <span class="tag">pgvector</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <p class="skill-group-title">Ferramentas & Cloud</p>
+          <div class="skill-tags">
+            <span class="tag hot">n8n</span>
+            <span class="tag hot">OpenAI API</span>
+            <span class="tag">AWS (EC2/RDS)</span>
+            <span class="tag">Vercel</span>
+            <span class="tag">Git</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="formation">
+        <p class="formation-title">Análise e Desenvolvimento de Sistemas</p>
+        <p class="formation-sub">UNISUAM · Rio de Janeiro · Concluído em dezembro de 2025</p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" data-width="100"></div>
+        </div>
+        <p class="progress-label">✓ Curso concluído — dezembro de 2025</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="projects-header">
+      <div class="reveal">
+        <p class="section-label">projetos</p>
+        <h2 class="section-title">O que eu construí.</h2>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- FEATURED: MegaEspecialista -->
+      <div class="project-card featured">
+        <div class="project-content">
+          <p class="project-num">001 · Destaque</p>
+          <h3 class="project-name">MegaEspecialista</h3>
+          <p class="project-desc">
+            Sistema web completo de gestão para supermercados — multi-tenant, com autenticação em três níveis (Admin, Copiloto, Cliente), painel de plano de ações com IA, notificações inteligentes via OpenAI e acessibilidade avançada.
+          </p>
+          <div class="project-tags">
+            <span class="ptag">ASP.NET Core MVC</span>
+            <span class="ptag">C#</span>
+            <span class="ptag">EF Core</span>
+            <span class="ptag yellow">Supabase</span>
+            <span class="ptag yellow">PostgreSQL</span>
+            <span class="ptag red">OpenAI</span>
+            <span class="ptag">BCrypt</span>
+          </div>
+          <div class="project-footer">
+            <span class="project-type">Web · SaaS · IA</span>
+            <a href="#" class="project-link">Saiba mais</a>
+          </div>
+        </div>
+        <div class="project-visual">&#123; &#125;</div>
+      </div>
+
+      <!-- SEM ERRO -->
+      <div class="project-card">
+        <p class="project-num">002</p>
+        <h3 class="project-name">SEM ERRO</h3>
+        <p class="project-desc">
+          Plataforma de gestão de checklists e operações para empresas. Múltiplos perfis de usuário, RLS no Supabase, templates de checklist e deploy em domínio próprio.
+        </p>
+        <div class="project-tags">
+          <span class="ptag">Next.js</span>
+          <span class="ptag">TypeScript</span>
+          <span class="ptag yellow">Supabase</span>
+          <span class="ptag">RLS</span>
+          <span class="ptag">Vercel</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-type">Web · SaaS</span>
+          <a href="https://semerro.net.br" target="_blank" class="project-link">semerro.net.br</a>
+        </div>
+      </div>
+
+      <!-- WhatsApp IA -->
+      <div class="project-card">
+        <p class="project-num">003</p>
+        <h3 class="project-name">Assistente WhatsApp IA</h3>
+        <p class="project-desc">
+          Workflow de atendimento via WhatsApp com RAG: documentos indexados como embeddings no Supabase pgvector, orquestrado com n8n e respostas geradas pelo GPT-4o.
+        </p>
+        <div class="project-tags">
+          <span class="ptag red">OpenAI</span>
+          <span class="ptag yellow">n8n</span>
+          <span class="ptag yellow">Supabase</span>
+          <span class="ptag">pgvector</span>
+          <span class="ptag">Python</span>
+          <span class="ptag">Datafy</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-type">Automação · IA</span>
+          <a href="#" class="project-link">Ver detalhes</a>
+        </div>
+      </div>
+
+      <!-- Relatório Engajamento -->
+      <div class="project-card">
+        <p class="project-num">004</p>
+        <h3 class="project-name">Relatório de Engajamento</h3>
+        <p class="project-desc">
+          Sistema Python que consome a API Evolutto, gera dashboards HTML com métricas de engajamento, login protegido e execução agendada via Windows Task Scheduler.
+        </p>
+        <div class="project-tags">
+          <span class="ptag">Python</span>
+          <span class="ptag">HTML/CSS</span>
+          <span class="ptag yellow">REST API</span>
+          <span class="ptag">Dashboard</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-type">Automação · Dashboard</span>
+          <a href="#" class="project-link">Ver detalhes</a>
+        </div>
+      </div>
+
+      <!-- MedAgenda -->
+      <div class="project-card">
+        <p class="project-num">005</p>
+        <h3 class="project-name">MedAgenda</h3>
+        <p class="project-desc">
+          Sistema de agendamento de consultas médicas com infraestrutura AWS (EC2 + RDS), integração de equipe via Git e conectividade segura entre instâncias.
+        </p>
+        <div class="project-tags">
+          <span class="ptag">PHP</span>
+          <span class="ptag yellow">AWS EC2</span>
+          <span class="ptag yellow">AWS RDS</span>
+          <span class="ptag">MySQL</span>
+          <span class="ptag">Git</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-type">Web · Cloud</span>
+          <a href="#" class="project-link">Ver detalhes</a>
+        </div>
+      </div>
+
+      <!-- E-commerce UNISUAM -->
+      <div class="project-card">
+        <p class="project-num">006</p>
+        <h3 class="project-name">E-commerce (UNISUAM)</h3>
+        <p class="project-desc">
+          Projeto acadêmico de e-commerce com PHP/MySQL e infraestrutura completa na AWS. Deploy automatizado via GitHub Actions e publicado no GitHub.
+        </p>
+        <div class="project-tags">
+          <span class="ptag">PHP</span>
+          <span class="ptag">MySQL</span>
+          <span class="ptag yellow">AWS</span>
+          <span class="ptag">GitHub Actions</span>
+        </div>
+        <div class="project-footer">
+          <span class="project-type">Acadêmico · Web</span>
+          <a href="https://github.com" target="_blank" class="project-link">GitHub</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div>
+      <div class="reveal">
+        <p class="section-label">experiência</p>
+        <h2 class="section-title">Trajetória profissional.</h2>
+      </div>
+      <div class="timeline" style="margin-top:2.5rem;">
+        <div class="timeline-item">
+          <p class="tl-date">2023 – atual</p>
+          <p class="tl-title">Desenvolvedora Full Stack</p>
+          <p class="tl-org">Rosadas Tech · Rio de Janeiro, RJ</p>
+          <p class="tl-desc">Desenvolvimento e manutenção dos sistemas MegaEspecialista e SEM ERRO. Integração de IA com OpenAI, automações com n8n e gestão de banco de dados em Supabase/PostgreSQL.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="tl-date">2024</p>
+          <p class="tl-title">Integração de IA & Automações</p>
+          <p class="tl-org">Projeto Leandro Rosadas · WhatsApp AI</p>
+          <p class="tl-desc">Desenvolvimento de workflow de atendimento inteligente via WhatsApp com RAG personalizado, substituindo Dify por integração direta com pgvector + OpenAI.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="reveal">
+        <p class="section-label">formação</p>
+        <h2 class="section-title">Educação.</h2>
+      </div>
+      <div class="timeline" style="margin-top:2.5rem;">
+        <div class="timeline-item">
+          <p class="tl-date">Ago. 2023 – Dez. 2025</p>
+          <p class="tl-title">Análise e Desenvolvimento de Sistemas</p>
+          <p class="tl-org">UNISUAM · Concluído</p>
+          <p class="tl-desc">Formação completa em desenvolvimento de sistemas com projetos práticos em infraestrutura AWS, banco de dados relacional, desenvolvimento web e mobile.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="tl-date">Contínuo</p>
+          <p class="tl-title">Aprendizado autodidata</p>
+          <p class="tl-org">Cursos, documentações e projetos reais</p>
+          <p class="tl-desc">Especialização contínua em IA/LLMs, arquiteturas de RAG, frameworks modernos de frontend e cloud computing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="reveal">
+    
+      <div class="contact-links">
+        <a href="https://wa.me/5521972675498" target="_blank" class="contact-link">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.115.549 4.099 1.515 5.82L.057 23.25a.75.75 0 0 0 .927.927l5.43-1.458A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.886 0-3.655-.52-5.168-1.427l-.371-.22-3.846 1.032 1.033-3.775-.24-.387A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          (21) 97267-5498
+        </a>
+        <a href="https://github.com/Anev9" target="_blank" class="contact-link">
+          <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 0z"/></svg>
+          github.com/Anev9
+        </a>
+        <a href="https://www.linkedin.com/in/deisiane-vieira-22a628386/" target="_blank" class="contact-link">
+          <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.03-1.85-3.03-1.85 0-2.13 1.44-2.13 2.94v5.66H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.35-1.85 3.59 0 4.25 2.36 4.25 5.43v6.31zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.77 13.02H3.56V9h3.55v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 · Deisiane Vieira — Desenvolvedora Full Stack</span>
+    <span> · Rio de Janeiro, RJ </span>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // ===== CUSTOM CURSOR =====
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function animateCursor() {
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.14; ry += (my - ry) * 0.14;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    })();
+
+    // ===== INTERSECTION OBSERVER =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // trigger progress bar
+          const fill = entry.target.querySelector('#progressFill');
+          if (fill) {
+            setTimeout(() => {
+              fill.style.width = fill.dataset.width + '%';
+            }, 200);
+          }
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal, .project-card, .timeline-item').forEach(el => observer.observe(el));
+
+    // Progress bar on own observer
+    const progObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fill = document.getElementById('progressFill');
+          if (fill) fill.style.width = fill.dataset.width + '%';
+        }
+      });
+    }, { threshold: 0.5 });
+    const formation = document.querySelector('.formation');
+    if (formation) progObserver.observe(formation);
+
+    // ===== PROJECT CARDS STAGGER =====
+    const cards = document.querySelectorAll('.project-card');
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.08 });
+    cards.forEach(c => cardObserver.observe(c));
+
+    // ===== TYPING ANIMATION =====
+    const roles = ['C# · ASP.NET Core MVC', 'TypeScript · Next.js', 'IA · OpenAI · n8n', 'Supabase · PostgreSQL', 'Full Stack Developer'];
+    let ri = 0, ci = 0, deleting = false;
+    const typingEl = document.getElementById('typingText');
+    function type() {
+      const current = roles[ri];
+      if (!deleting) {
+        typingEl.textContent = current.slice(0, ++ci);
+        if (ci === current.length) { deleting = true; setTimeout(type, 1800); return; }
+      } else {
+        typingEl.textContent = current.slice(0, --ci);
+        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; }
+      }
+      setTimeout(type, deleting ? 40 : 70);
+    }
+    setTimeout(type, 1400);
+
+    // ===== SMOOTH NAV ACTIVE =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav ul a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+      });
+    });
+  </script>
+</body>
+</html>
